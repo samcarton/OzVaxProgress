@@ -60,7 +60,10 @@ namespace OzVaxProgress.Services
             var stringBuilder = new StringBuilder(_progressBarService.CreateProgressBar(progressFraction));
             
             stringBuilder.AppendLine("");
-            stringBuilder.AppendLine($"Percentage completely vaccinated as of {date}: {progressFraction:P2}");
+            stringBuilder.AppendLine("");
+            stringBuilder.AppendLine($"Fully vaccinated as of {date}: {progressFraction:P2}");
+            stringBuilder.AppendLine("");
+            stringBuilder.AppendLine("#CovidVaccine #COVID19 #COVID19Aus");
             
             return stringBuilder.ToString();
         }
