@@ -16,7 +16,7 @@ namespace OzVaxProgress.Services
             try
             {
                 await using var populationStream =
-                    await "https://github.com/owid/covid-19-data/raw/master/scripts/input/un/population_2020.csv"
+                    await "https://github.com/owid/covid-19-data/raw/master/scripts/input/un/population_latest.csv"
                         .GetStreamAsync();
 
                 using var reader = new StreamReader(populationStream);
