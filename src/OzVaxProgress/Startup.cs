@@ -73,8 +73,7 @@ namespace OzVaxProgress
                     if (pop.Success && vax.Success)
                     {
                         Console.WriteLine(vax.Vaccinations);
-                        var progress = (vax.Vaccinations.FullyVaccinated ?? 0) / (double) pop.Population.Population;
-                        resp = $"Progress: {progress:P2}";
+                        resp = new TweetBuilder().BuildTweet(new SummaryBuilder().Build(vax,pop));
                     }
 
                     await context.Response.WriteAsync(resp);
@@ -82,10 +81,14 @@ namespace OzVaxProgress
 
                 endpoints.MapGet("/progressBar", async context =>
                 {
-                    var resp = new ProgressBarService().CreateProgressBar(0.69);
-                    var r2 = new ProgressBarService().CreateProgressBar(0.74);
-                    var r3 = new ProgressBarService().CreateProgressBar(0.0);
-                    await context.Response.WriteAsync(resp);
+                    var response = new ProgressBarService().CreateProgressBar(0.69);
+                    await context.Response.WriteAsync(response);
+                });
+                
+                endpoints.MapGet("/progressBar/syringe", async context =>
+                {
+                    var syringe = new ProgressBarService().CreateSyringeProgressBar(0.69);
+                    await context.Response.WriteAsync(syringe);
                 });
 
                 endpoints.MapGet("/testStorage", async context =>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using OzVaxProgress.Models;
 
 namespace OzVaxProgress.Services
 {
@@ -39,12 +40,11 @@ namespace OzVaxProgress.Services
                     Console.WriteLine("Unable to retrieve population data, aborting.");
                     return;
                 }
-                
-                var progress = (vaxResponse.Vaccinations.FullyVaccinated ?? 0) / (double)populationResponse.Population.Population;
 
-                var tweet = BuildTweet(progress, vaxResponse.Vaccinations.Date);
+                var summary = new SummaryBuilder().Build(vaxResponse, populationResponse);
+                var tweet = new TweetBuilder().BuildTweet(summary);
                 await TweetAsync(tweet);
-                Console.WriteLine($"Tweeted update for country code {country.Code}: [{vaxResponse.Vaccinations.Date},{progress:P2}]");
+                Console.WriteLine($"Tweeted update for country code {country.Code}: [{vaxResponse.Vaccinations.Date},{summary}]");
 
                 await _storageService.SetLastUpdatedAsync(new LastUpdatedModel{CountryCode = country.Code, Date = vaxResponse.Vaccinations.Date});
                 Console.WriteLine($"Updated 'last updated' for {country.Code}");
@@ -55,18 +55,6 @@ namespace OzVaxProgress.Services
             Console.WriteLine($"No update required - vaxResponse.Success: {vaxResponse.Success}");
         }
 
-        private string BuildTweet(double progressFraction, string date)
-        {
-            var stringBuilder = new StringBuilder(_progressBarService.CreateProgressBar(progressFraction));
-            
-            stringBuilder.AppendLine("");
-            stringBuilder.AppendLine("");
-            stringBuilder.AppendLine($"Fully vaccinated as of {date}: {progressFraction:P2}");
-            stringBuilder.AppendLine("");
-            stringBuilder.AppendLine("#CovidVaccine #COVID19 #COVID19Aus");
-            
-            return stringBuilder.ToString();
-        }
 
         private Task TweetAsync(string tweet)
         {

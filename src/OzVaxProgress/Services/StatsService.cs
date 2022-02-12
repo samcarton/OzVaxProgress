@@ -58,7 +58,7 @@ namespace OzVaxProgress.Services
                     {
                         Success = true,
                         Vaccinations = new VaccinationRecord(latest.Date, latest.TotalVaccinations,
-                            latest.PeopleFullyVaccinated)
+                            latest.PeopleFullyVaccinated, latest.PeopleVaccinated, latest.TotalBoosters)
                     };
                 }
             }
@@ -84,7 +84,7 @@ namespace OzVaxProgress.Services
     }
 
     public record PopulationRecord(long Population, long Year);
-    public record VaccinationRecord(string Date, long? Total, long? FullyVaccinated);
+    public record VaccinationRecord(string Date, long? Total, long? SecondDose, long? FirstDose, long? Boosted);
 
     public class PopulationCsv
     {
@@ -110,5 +110,8 @@ namespace OzVaxProgress.Services
         public long? PeopleVaccinated {get;set;}
         [Name("people_fully_vaccinated")]
         public long? PeopleFullyVaccinated {get;set;}
+        
+        [Name("total_boosters")]
+        public long? TotalBoosters {get;set;}
     }
 }
